@@ -13,7 +13,13 @@
  (depends
   (ppx_deriving (>= 4.4))
   (alg (>= ~dev))
-  (dune (and :build (>= 1.11.3)))))
+
+  (dune (and :build (>= 1.11.3)))
+
+  (qcheck (and :with-test (>= 0.11)))
+  (qcheck-alcotest (and :with-test (>= 0.11)))
+  (alcotest (and :with-test (>= 0.8.5)))
+))
 
 (package
  (name these.align)
@@ -22,4 +28,10 @@
  (depends
   (alg (>= ~dev))
   (these (>= ~dev))
-  (dune (and :build (>= 1.11.3)))))
+
+  (dune (and :build (>= 1.11.3)))
+
+  (qcheck (and :with-test (>= 0.11)))
+  (qcheck-alcotest (and :with-test (>= 0.11)))
+  (alcotest (and :with-test (>= 0.8.5)))
+))

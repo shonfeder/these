@@ -8,6 +8,9 @@ depends: [
   "alg" {>= "~dev"}
   "these" {>= "~dev"}
   "dune" {build & >= "1.11.3"}
+  "qcheck" {with-test & >= "0.11"}
+  "qcheck-alcotest" {with-test & >= "0.11"}
+  "alcotest" {with-test & >= "0.8.5"}
 ]
 build: [
   ["dune" "subst"] {pinned}
