@@ -4,7 +4,15 @@ type ('a, 'b) t =
   | These of 'a * 'b
 [@@deriving eq, ord, show]
 
-(* type ('a, 'b) op = ('a, 'b) t -> ('a, 'b) t -> ('a, 'b) t *)
+let to_string fa fb t =
+  let show' f fmt x = x |> f |> Format.fprintf fmt "%s" in
+  show (show' fa) (show' fb) t
+
+(** Constructors *)
+
+let these a b = These (a, b)
+let this a = This a
+let that b = That b
 
 let map_this ~f = function
   | This x       -> This (f x)
@@ -15,12 +23,6 @@ let map_that ~f = function
   | This x       -> This x
   | That y       -> That (f y)
   | These (x, y) -> These (x, f y)
-
-(** Constructors *)
-
-let these a b = These (a, b)
-let this a = This a
-let that b = That b
 
 (** Eliminators *)
 
@@ -36,12 +38,12 @@ let to_pair a b = function
 
 let merge ~f = case Fun.id Fun.id f
 
-let bimap ~a ~b = function
-  | This a'        -> This (a a')
-  | That b'        -> That (b b')
-  | These (a', b') -> These (a a', b b')
+let bimap ~this ~that = function
+  | This a       -> This (this a)
+  | That b       -> That (that b)
+  | These (a, b) -> These (this a, that b)
 
-let merge_with ~a ~b ~f t = t |> bimap ~a ~b |> merge ~f
+let merge_with ~this ~that ~these t = t |> bimap ~this ~that |> merge ~f:these
 
 (* TODO Make tail recursive *)
 let rec partition = function
@@ -52,6 +54,8 @@ let rec partition = function
     | This a -> (a :: as', bs', abs')
     | That b -> (as', b :: bs', abs')
     | These (a, b) -> (as', bs', (a, b) :: abs')
+
+(* TODO rename removing redundnat "these" etc *)
 
 let rec partition_here_there = function
   | [] -> ([], [])

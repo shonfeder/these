@@ -25,7 +25,7 @@ module Make (Seed : Seed) : S with type 'a t = 'a Seed.t = struct
   let pad_zip a b =
     let f x =
       x
-      |> These.bimap ~a:Option.some ~b:Option.some
+      |> These.bimap ~this:Option.some ~that:Option.some
       |> These.to_pair None None
     in
     align_with ~f a b
