@@ -1,1 +1,13 @@
-#+TITLE: These
+#+TITLE: =These=: A Type for Inclusive Disjunction
+
+A port and adaptation of C. McCann's and Oleg Grenrus' [[http://hackage.haskell.org/package/these][Data.These]] Haskell
+library.
+
+=These.t= is a type for inclusive disjunctions. This code base includes two
+libraries: the implementation of =These.t= and it's associated functions, and
+the =Align= library, which uses =These.t= to enable zipping and unzipping
+structures with mismatched shapes (e.g., lists of unequal length).
+
+=These.t= can be leveraged anywhere you want to represent a value which can be
+*this* thing of type ='a=, *that* thing of type *'b* or both of *these* things
+given together.
