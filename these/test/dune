@@ -1,2 +1,6 @@
 (test
- (name these))
+ (name test)
+ (libraries these
+            alcotest
+            qcheck
+            qcheck-alcotest))
