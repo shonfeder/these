@@ -20,13 +20,12 @@ module Alg = Alg_structs
     ['b].
 
     [('a, 'b) t] is logically equivalent to the type [('a, ('b * 'a Option.t))
-    Result.t ], but easier to understand and work with.
-
-*)
+    Result.t ], but easier to understand and work with. *)
 type ('a, 'b) t =
   | This of 'a       (** [This a] is this [a : 'a] by itself *)
   | That of 'b       (** [That b] is that [b : 'b] by itself *)
   | These of 'a * 'b (** [These (a, b)] gives both this [a : 'a] and that [b : 'b] *)
+
 (** Given a value [These(a, b) : ('a, 'b) t] we can refer to [a] as {i this} and
     refer to [b] as {i that}. E.g., in [These(1, "a") : (int, string) t] {i
     this} is [1] and {i that} is ["a"]. *)
@@ -120,8 +119,7 @@ val to_pair : 'a -> 'b -> ('a, 'b) t -> 'a * 'b
 val merge : f:('a -> 'a -> 'a) -> ('a, 'a) t -> 'a
 
 (** [merge_with ~this ~that ~these these_ab] is like {!val:merge}, but maps
-    {i this} or {i that} to a new value with the respective function if
-    needed *)
+    {i this} or {i that} to a new value with the respective function *)
 val merge_with : this:('a -> 'c) -> that:('b -> 'c) -> these:('c -> 'c -> 'c) -> ('a, 'b) t -> 'c
 
 (** {2 Partitioning} *)
