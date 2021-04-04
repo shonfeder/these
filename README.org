@@ -1,7 +1,9 @@
 #+TITLE: =These=: A Type for Inclusive Disjunction
 
-A port and adaptation of C. McCann's and Oleg Grenrus' [[http://hackage.haskell.org/package/these][Data.These]] Haskell
-library.
+*NOTE*: This library is unpublished is unpolished. Use at your own risk!
+
+A (partial and WIP) port and adaptation of C. McCann's and Oleg Grenrus'
+[[http://hackage.haskell.org/package/these][Data.These]] Haskell library.
 
 =These.t= is a type for inclusive disjunctions. This code base includes two
 libraries: the implementation of =These.t= and it's associated functions, and
