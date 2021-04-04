@@ -1,4 +1,4 @@
 (library
  (name align)
  (public_name these.align)
- (libraries alg these))
+ (libraries alg_structs these))

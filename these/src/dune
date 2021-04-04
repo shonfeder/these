@@ -1,6 +1,6 @@
 (library
  (public_name these)
- (libraries alg)
+ (libraries alg_structs)
  (preprocess
   (pps ppx_deriving
        ppx_deriving.eq

@@ -1,3 +1,7 @@
+(**/*)
+module Alg = Alg_structs
+(**/*)
+
 (** {1 [These]: A Type for Inclusive Disjunction }
 
     A port and adaptation of C. McCann's and Oleg Grenrus'
@@ -164,11 +168,11 @@ val undsitr_pair_these : ('a * 'c, 'b * 'c) t -> (('a, 'b) t * 'c)
 
     {3 {b This} Biased Structures}
 
-    {!modules: Make.This.Functor  Make.This.Cata}
+    {!modules: Make.This.Functor  Make.This.Foldable}
 
     {3 {b That} Biased Structures}
 
-    {!modules: Make.That.Functor  Make.That.Cata} *)
+    {!modules: Make.That.Functor  Make.That.Foldable} *)
 module Make : sig
 
   (** TODO {!module-type:Alg.Semigroup.S} balh blah yaya yeaaa sbinginf
@@ -182,13 +186,13 @@ module Make : sig
       dinsdf asidnf easd *)
   module This : sig
     module Functor (T : Alg.Triv.S) : Alg.Functor.S with type 'a t = ('a, T.t) t
-    module Cata (T : Alg.Triv.S) : Alg.Cata.S with type 'a t = ('a, T.t) t
+    module Foldable (T : Alg.Triv.S) : Alg.Foldable.S with type 'a t = ('a, T.t) t
   end
 
   (** TODO This and That blah dah *)
   module That : sig
     module Functor (T : Alg.Triv.S) : Alg.Functor.S with type 'b t = (T.t, 'b) t
-    module Cata (T : Alg.Triv.S) : Alg.Cata.S with type 'a t = (T.t, 'a) t
+    module Foldable (T : Alg.Triv.S) : Alg.Foldable.S with type 'a t = (T.t, 'a) t
   end
 end
 

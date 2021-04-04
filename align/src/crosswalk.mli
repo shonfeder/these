@@ -1,8 +1,9 @@
 module Align = Align_internal
+module Alg = Alg_structs
 
 module type S = sig
   include Alg.Functor.S
-  include Alg.Cata.S with type 'a t := 'a t
+  include Alg.Foldable.S with type 'a t := 'a t
 
   type 'a f
 
@@ -12,7 +13,7 @@ end
 
 module type Seed = sig
   include Alg.Functor.S
-  include Alg.Cata.S with type 'a t := 'a t
+  include Alg.Foldable.S with type 'a t := 'a t
 
   module Align : Align.S
   type 'a f = 'a Align.t

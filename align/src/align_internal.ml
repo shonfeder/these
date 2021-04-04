@@ -1,3 +1,5 @@
+module Alg = Alg_structs
+
 module type Seed = sig
   include Alg.Functor.S
   val empty : 'a t
@@ -6,8 +8,6 @@ end
 
 module type S = sig
   include Seed
-  val empty : 'a t
-  val align : 'a t -> 'b t -> ('a, 'b) These.t t
   val align_with : f:(('a, 'b) These.t -> 'c) -> 'a t -> 'b t -> 'c t
   val semi_align : m:(module Alg.Semigroup.S with type t = 'm) -> 'm t -> 'm t -> 'm t
   val pad_zip : 'a t -> 'b t -> ('a option * 'b option) t
@@ -76,8 +76,12 @@ end
 
 module Seq : S with type 'a t = 'a Seq.t = struct
   module Seed = struct
-    include Seq
-    let map ~f = map f
+    let empty = Seq.empty
+
+    include Alg.Functor.Make (struct
+        include Seq
+        let map ~f = map f
+      end)
 
     let rec align a b = let open These in
       match a ()    , b () with
@@ -91,9 +95,11 @@ end
 
 module Map (M : Map.S): S with type 'a t = 'a M.t = struct
   module Seed = struct
-    type 'a t = 'a M.t
+    include Alg.Functor.Make (struct
+        type 'a t = 'a M.t
 
-    let map ~f = M.map f
+        let map ~f = M.map f
+      end)
 
     let empty = M.empty
 

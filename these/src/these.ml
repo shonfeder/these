@@ -1,3 +1,8 @@
+(* type T a b =
+      | This a
+ *    | That b
+ *    | These a b *)
+
 type ('a, 'b) t =
   | This of 'a
   | That of 'b
@@ -93,6 +98,8 @@ let undsitr_pair_these = function
   | That ((b, c))          -> (That b, c)
   | These ((a, c), (b, _)) -> (These (a, b), c)
 
+module Alg = Alg_structs
+
 module Make = struct
   module Semigroup (This : Alg.Semigroup.S) (That : Alg.Semigroup.S) :
     Alg.Semigroup.S with type t = (This.t, That.t) t = struct
@@ -109,15 +116,17 @@ module Make = struct
           | These (a, x), That      y  -> These (a, That.op x y)
           | These (a, x), These (b, y) -> These (This.op a b, That.op x y)
       end)
-  end
+  end (* Semigroup *)
 
   module This = struct
     module Functor (T : Alg.Triv.S) : Alg.Functor.S with type 'a t = ('a, T.t) t = struct
-      type nonrec 'a t = ('a, T.t) t
-      let map = map_this
+      include Alg.Functor.Make (struct
+          type nonrec 'a t = ('a, T.t) t
+          let map = map_this
+        end)
     end
 
-    module Cata (T : Alg.Triv.S) : Alg.Cata.S with type 'a t = ('a, T.t) t = struct
+    module Foldable (T : Alg.Triv.S) : Alg.Foldable.S with type 'a t = ('a, T.t) t = struct
       module Seed = struct
         type nonrec 'a t = ('a, T.t) t
 
@@ -127,17 +136,19 @@ module Make = struct
           | These (x, _) -> f x init
       end
 
-      include Alg.Cata.Make(Seed)
+      include Alg.Foldable.Make(Seed)
     end
-  end (* THis *)
+  end (* This *)
 
   module That = struct
     module Functor (T : Alg.Triv.S) : Alg.Functor.S with type 'b t = (T.t, 'b) t = struct
-      type nonrec 'b t = (T.t, 'b) t
-      let map = map_that
+      include Alg.Functor.Make (struct
+          type nonrec 'b t = (T.t, 'b) t
+          let map = map_that
+        end)
     end
 
-    module Cata (T : Alg.Triv.S) : Alg.Cata.S with type 'a t = (T.t, 'a) t = struct
+    module Foldable (T : Alg.Triv.S) : Alg.Foldable.S with type 'a t = (T.t, 'a) t = struct
       module Seed = struct
         type nonrec 'a t = (T.t, 'a) t
 
@@ -147,26 +158,27 @@ module Make = struct
           | These (_, x) -> f x init
       end
 
-      include Alg.Cata.Make(Seed)
+      include Alg.Foldable.Make(Seed)
     end
 
-    module Traversable (A : Alg.Applicative.S) (T : Alg.Triv.S) :
-      Alg.Traversable.S with type 'a t = (T.t, 'a) t = struct
-      module Seed = struct
-        include Functor (T)
-        include Cata (T)
-
-        module A = A
-        type nonrec 'a t = 'a t
-
-        let traverse ~f = function
-          | This a -> A.return (This a)
-          | That x -> A.map ~f:that (f x)
-          | These (a, x) -> A.map ~f:(these a) (f x)
-      end
-
-      include Alg.Traversable.Make (Seed)
-    end
+    (* TODO *)
+    (*   module Traversable (A : Alg.Applicative.S) (T : Alg.Triv.S) :
+     *     Alg.Traversable.S with type 'a t = (T.t, 'a) t = struct
+     *     module Seed = struct
+     *       include Functor (T)
+     *       include Foldable (T)
+     *
+     *       module A = A
+     *       type nonrec 'a t = 'a t
+     *
+     *       let traverse ~f = function
+     *         | This a -> A.return (This a)
+     *         | That x -> A.map ~f:that (f x)
+     *         | These (a, x) -> A.map ~f:(these a) (f x)
+     *     end
+     *
+     *     include Alg.Traversable.Make (Seed)
+     *   end
+     * end (\* That *\) *)
   end (* That *)
-
 end (* Make *)
