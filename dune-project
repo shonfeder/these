@@ -12,7 +12,7 @@
  (description "Based on the package authored by C. McCann, Oleg Grenrus")
  (depends
   (ppx_deriving (>= 4.4))
-  (alg (>= ~dev))
+  (alg_structs (>= 0.1.3))
 
   (dune (and :build (>= 1.11.3)))
 
@@ -26,7 +26,7 @@
  (synopsis "Port of Haskell's \"Data.Align\" and associated auxiliaries")
  (description "Based on the package authored by C. McCann, Oleg Grenrus")
  (depends
-  (alg (>= ~dev))
+  (alg_structs (>= 0.1.3))
   (these (>= ~dev))
 
   (dune (and :build (>= 1.11.3)))
