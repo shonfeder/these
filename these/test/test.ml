@@ -18,6 +18,7 @@ module Arbitrary = struct
 end
 
 let property name = QCheck.Test.make ~name
+let test name ~expect f = QCheck.Test.make ~name (always expect) (fun expected -> (f ()) = expected)
 
 let suite name tests =
   let tests = List.map QCheck_alcotest.to_alcotest tests in
@@ -86,4 +87,13 @@ let property_tests =
         end
     ]
 
-let () = Alcotest.run "these tests" [ property_tests ]
+let unit_tests =
+  suite "unit tests"
+    [ test "to_string"
+        ~expect:"(These.These (1, str))"
+        begin
+          fun () -> These.(to_string Int.to_string Fun.id (these 1 "str"))
+        end
+    ]
+
+let () = Alcotest.run "these tests" [ property_tests; unit_tests ]
